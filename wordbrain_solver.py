@@ -6,10 +6,12 @@ from time import time
 class WordBrainSolver:
 
     def __init__(self):
-        self.init_board = None
-        self.side_length = None
-        self.board_int = None
-        self.init_movetree = None
+        self.init_board = np.array([])
+        self.board_int = np.array([])
+
+        self.init_movetree = dict()
+
+        self.side_length = 0
 
         self.word_ls = []
         self.word_lengths = []
@@ -41,10 +43,10 @@ class WordBrainSolver:
 
 
     def is_board_made(self):
-        if self.init_board != None:
+        if self.init_board.size != 0:
             return True
         else:
-            raise NameError("The board is not defined. Use the 'make_board' method.")
+            raise ValueError("The board is not defined. Use the 'make_board' method.")
             
 
     def num2let(self, n, board):
@@ -225,19 +227,19 @@ def main():
     start = time()
     w.solution(w.init_board, 0)
     tot = time() - start
-    with open('wb_solver_times.txt', 'a') as fid:
-        for l in w.word_lengths:
-            fid.write(str(l) + ', ')
-            
-        fid.write(str(tot) + '\n')
     if len(w.answer) == 0:
         print("\n\nNo solution could be found.")
     else:
-        print "\n"*20 + "Solution:\n"
-        for word in w.answer:
-            print word.rjust(25)
+        with open('wb_solver_times.txt', 'a') as fid:
+            fid.write(', '.join([str(i) for i in w.word_lengths]) + ' ')
             
-        print '\nTotal solution time: %s sec' %(str(round(tot, 2)))
+            fid.write(str(tot) + '\n')
+
+            print "\n"*20 + "Solution:\n"
+            for word in w.answer:
+                print word.rjust(25)
+            
+            print '\nTotal solution time: %s sec' %(str(round(tot, 2)))
     print '\n'*13
     if 'y' in raw_input("Solve the next puzzle? (y / n):  ").lower():
         print '\n'*30
