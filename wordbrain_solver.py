@@ -224,11 +224,16 @@ def main():
     with open('wb_solver_times.txt', 'a') as fid:
         for l in w.word_lengths:
             fid.write(str(l) + ', ')
+            
         fid.write(str(tot) + '\n')
-    print "\n"*20 + "Solution:\n"
-    for word in w.answer:
-        print word.rjust(25)
-    print '\nTotal solution time: %s sec' %(str(round(tot, 2)))
+    if len(w.answer) == 0:
+        print("\n\nNo solution could be found.")
+    else:
+        print "\n"*20 + "Solution:\n"
+        for word in w.answer:
+            print word.rjust(25)
+            
+        print '\nTotal solution time: %s sec' %(str(round(tot, 2)))
     print '\n'*13
     if 'y' in raw_input("Solve the next puzzle? (y / n):  ").lower():
         print '\n'*30
