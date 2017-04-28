@@ -1,2 +1,5 @@
+*.suo
+*.pyproj
+*.pyproj.user
 *.pyc
 wb_solver_times.txt

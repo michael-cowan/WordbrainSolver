@@ -208,9 +208,7 @@ class WordBrainSolver:
                     self.answer.pop()
 
 
-
 #######################################################################################################
-
 
 
 def main():
@@ -240,23 +238,5 @@ def main():
         main()
 
 
-def test():
-    global w, answer
-    w = WordBrainSolver()
-    w.choose_word_ls()
-    w.init_board = np.array([list('nnlaa'), list('onant'), list('nntpe'), list('gnapi'), list('siecg')])
-    w.board_int = np.arange(w.init_board.size).reshape(w.init_board.shape)
-    w.init_movetree = w.make_move_tree(w.init_board)
-    w.word_lengths = [5, 6, 4, 3, 7]
-    w.solution(w.init_board, 0)
-    print "\n\nSolution:\n"
-    for word in w.answer:
-        print word.rjust(25)
-
-
-
 if __name__ == '__main__':
     main()
-
-
-    
