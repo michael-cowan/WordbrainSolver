@@ -6,8 +6,15 @@ from time import time
 class WordBrainSolver:
 
     def __init__(self):
-        self.answer = []
+        self.init_board = None
+        self.side_length = None
+        self.board_int = None
+        self.init_movetree = None
+
+        self.word_ls = []
         self.word_lengths = []
+        self.answer = []
+
         self.solved = False
 
 
@@ -34,10 +41,9 @@ class WordBrainSolver:
 
 
     def is_board_made(self):
-        try:
-            test = self.board_int
+        if self.init_board != None:
             return True
-        except:
+        else:
             raise NameError("The board is not defined. Use the 'make_board' method.")
             
 
@@ -51,16 +57,16 @@ class WordBrainSolver:
     def make_board(self):
         while 1:
             try:
-                self.side = int(raw_input("\n\nSize of board (n x n), n = "))
+                self.side_length = int(raw_input("\n\nSize of board (n x n), n = "))
                 break
             except ValueError:
                 print '\nInput must be an integer.\n\n'
 
         letters = []
         ind = 0
-        while ind != self.side:
+        while ind != self.side_length:
             letters += [raw_input("\nLetters in Row %s: " %(str(ind + 1)))]
-            if len(letters[ind]) != self.side:
+            if len(letters[ind]) != self.side_length:
                 letters.pop(ind)
                 print "\n\nWrong Number of Letters in Row %s.\n\n" %(str(ind + 1))
             else:
