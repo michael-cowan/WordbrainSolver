@@ -2,7 +2,6 @@ import numpy as np
 from string import lowercase as letts
 from time import time
 
-
 class WordBrainSolver:
 
     def __init__(self):
