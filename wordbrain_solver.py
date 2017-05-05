@@ -244,6 +244,17 @@ def main():
         print '\n'*30
         main()
 
+def setup(board, word_lengths):
+    w = WordBrainSolver()
+    w.choose_word_ls()
+
+    w.init_board = board
+    w.board_int = np.arange(w.init_board.size).reshape(w.init_board.shape)
+
+    w.init_movetree = w.make_move_tree(w.init_board)
+    w.word_lengths = word_lengths
+
+    return w
 
 if __name__ == '__main__':
     main()
