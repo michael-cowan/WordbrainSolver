@@ -1,6 +1,7 @@
 import numpy as np
 from string import lowercase as letts
 from time import time
+from multiprocessing.dummy import Pool
 
 class WordBrainSolver:
 
@@ -21,17 +22,17 @@ class WordBrainSolver:
 
     def load_word_ls(self, wl):
         with open(wl, 'r') as fid:
-            self.word_ls = {w.replace('\n', '') for w in fid.readlines()}
+            self.word_ls = {w.strip() for w in fid}
 
 
     def choose_word_ls(self, ion = False, path = 'wordbrain_words.txt'):
         if ion:
             while 1:
                 print "1:  wordbrain_words.txt\n"
-                print "2:  words.txt\n\n"
+                print "2:  enable1.txt\n\n"
                 try:
                     ans = int(raw_input("Please choose word list (1 or 2): "))
-                    wl = 'wordbrain_words.txt' if ans == 1 else 'words.txt'
+                    wl = 'wordbrain_words.txt' if ans == 1 else 'enable1.txt'
                     break
                 except:
                     raw_input("Incorrect input please try again.")
@@ -220,7 +221,7 @@ class WordBrainSolver:
 
 def main():
     w = WordBrainSolver()
-    w.choose_word_ls()
+    w.choose_word_ls(ion=True)
     w.make_board()
     w.get_word_lengths()
     start = time()
