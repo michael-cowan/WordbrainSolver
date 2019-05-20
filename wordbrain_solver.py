@@ -1,10 +1,9 @@
 import numpy as np
 from string import lowercase as letts
 from time import time
-from multiprocessing.dummy import Pool
+
 
 class WordBrainSolver:
-
     def __init__(self):
         self.init_board = np.array([])
         self.board_int = np.array([])
@@ -19,13 +18,11 @@ class WordBrainSolver:
 
         self.solved = False
 
-
     def load_word_ls(self, wl):
         with open(wl, 'r') as fid:
             self.word_ls = {w.strip() for w in fid}
 
-
-    def choose_word_ls(self, ion = False, path = 'wordbrain_words.txt'):
+    def choose_word_ls(self, ion=False, path='wordbrain_words.txt'):
         if ion:
             while 1:
                 print "1:  wordbrain_words.txt\n"
@@ -41,13 +38,12 @@ class WordBrainSolver:
         else:
             self.load_word_ls(path)
 
-
     def is_board_made(self):
         if self.init_board.size != 0:
             return True
         else:
-            raise ValueError("The board is not defined. Use the 'make_board' method.")
-            
+            raise ValueError("The board is not defined. "
+                             "Use the 'make_board' method.")
 
     def num2let(self, n, board):
         self.is_board_made()
@@ -55,11 +51,11 @@ class WordBrainSolver:
         return board[n / board.shape[0],
                      n % board.shape[0]]
 
-
     def make_board(self):
         while 1:
             try:
-                self.side_length = int(raw_input("\n\nSize of board (n x n), n = "))
+                self.side_length = int(raw_input("\n\nSize of board "
+                                                 "(n x n), n = "))
                 break
             except ValueError:
                 print '\nInput must be an integer.\n\n'
@@ -67,63 +63,68 @@ class WordBrainSolver:
         letters = []
         ind = 0
         while ind != self.side_length:
-            letters += [raw_input("\nLetters in Row %s: " %(str(ind + 1)))]
+            letters += [raw_input("\nLetters in Row %s: " % (str(ind + 1)))]
             if len(letters[ind]) != self.side_length:
                 letters.pop(ind)
-                print "\n\nWrong Number of Letters in Row %s.\n\n" %(str(ind + 1))
+                print("\n\nWrong Number of Letters in Row "
+                      "%s.\n\n" % (str(ind + 1)))
             else:
                 ind += 1
 
         self.init_board = np.array([list(str(s)) for s in letters])
-        self.board_int = np.arange(self.init_board.size).reshape(self.init_board.shape)
+        self.board_int = np.arange(self.init_board.size) \
+            .reshape(self.init_board.shape)
 
         print '\n' * 2
         self.init_movetree = self.make_move_tree(self.init_board)
         return
 
-
     def get_word_lengths(self):
         while 1:
             try:
-                self.word_lengths = map(int,
-                                    raw_input("Input word lengths separated by commas: ").replace(' ','').split(','))
-                if sum(self.word_lengths) != sum([1 for i in self.init_board.flatten() if i != ' ']):
-                    print "\n\nNumber of letters doesn't match the size of the board."
+                raw_word_lengths = raw_input("Input word lengths "
+                                             "separated by commas: ")
+                self.word_lengths = map(int, raw_word_lengths
+                                        .replace(' ', '').split(','))
+
+                if sum(self.word_lengths) != (self.init_board != ' ').sum():
+                    print("\n\nNumber of letters != size of board")
                     raise ValueError
                 return
             except ValueError:
-                print '\nIncorrect input, please try again.\n\n'
+                print('\nIncorrect input, please try again.\n\n')
             else:
                 return
 
-
     def make_move_tree(self, board):
         self.is_board_made()
-        moves = np.array([[i,j] for i in [1,0,-1] for j in [1,0,-1] if i or j])
+        moves = np.array([[i, j] for i in [1, 0, -1]
+                          for j in [1, 0, -1] if i or j])
         d = {}
         for r in xrange(len(self.board_int)):
             for c in xrange(len(self.board_int)):
-                ar = np.array([r,c])
+                ar = np.array([r, c])
                 ls = []
                 if board[r, c] != ' ':
                     for m in (moves + ar):
                         try:
                             if -1 not in m:
                                 num = self.board_int[m[0], m[1]]
-                                if num != self.board_int[r, c] and board[m[0], m[1]] != ' ':
+                                notblank = bool(board[m[0], m[1]] != ' ')
+                                if num != self.board_int[r, c] and notblank:
                                     ls.append(num)
                         except:
                             continue
 
-                d[self.board_int[r,c]] = ls
+                d[self.board_int[r, c]] = ls
 
         return d
-
 
     def search4word(self, start, length, movetree, board):
         tree = {i: iter(movetree[i]) for i in movetree}
         word = self.num2let(start, board)
-        search_ls = {w for w in self.word_ls if w.startswith(word) and len(w) == length}
+        search_ls = {w for w in self.word_ls
+                     if w.startswith(word) and len(w) == length}
         parent = start
         done = False
         mapper = [start]
@@ -156,22 +157,19 @@ class WordBrainSolver:
                 mapper.pop(-1)
                 continue
 
-
             if len(word) == length:
                 if word in test:
                     if word in sol:
-                        sol[word] = [i for i in sol[word]] + [[i for i in mapper]]
+                        sol[word] = [i for i in sol[word]] \
+                            + [[i for i in mapper]]
                     else:
                         sol[word] = [[i for i in mapper]]
-                    
 
                 word = word[:-1]
                 mapper.pop(-1)
                 parent = mapper[-1]
 
-
         return sol
-
 
     def find_words(self, length, board):
         ans = dict()
@@ -186,7 +184,6 @@ class WordBrainSolver:
 
         return ans
 
-
     def update_board(self, nums, board):
         for c in xrange(len(board)):
             for r in xrange(len(board)):
@@ -194,7 +191,6 @@ class WordBrainSolver:
                     board[:r+1, c] = [' '] + list(board[:r, c])
 
         return board
-
 
     def solution(self, bd, j):
         word_dict = self.find_words(self.word_lengths[j], bd)
@@ -215,8 +211,7 @@ class WordBrainSolver:
                 else:
                     self.answer.pop()
 
-
-#######################################################################################################
+###############################################################################
 
 
 def main():
@@ -232,18 +227,18 @@ def main():
     else:
         with open('wb_solver_times.txt', 'a') as fid:
             fid.write(', '.join([str(i) for i in w.word_lengths]) + ' ')
-            
+
             fid.write(str(tot) + '\n')
 
             print "\n"*20 + "Solution:\n"
             for word in w.answer:
                 print word.rjust(25)
-            
-            print '\nTotal solution time: %s sec' %(str(round(tot, 2)))
-    print '\n'*13
-    if 'y' in raw_input("Solve the next puzzle? (y / n):  ").lower():
+
+            print '\nTotal solution time: %s sec' % (str(round(tot, 2)))
+    if 'y' in raw_input("\nSolve the next puzzle? (y / n):  ").lower():
         print '\n'*30
         main()
+
 
 def setup(board, word_lengths):
     w = WordBrainSolver()

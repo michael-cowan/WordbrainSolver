@@ -19,24 +19,21 @@ EASY_WORD_LENGTHS = [
     ]
 
 EASY_ANSWERS = [
-    'petal', 'cannon', 'sign', 
+    'petal', 'cannon', 'sign',
     'pig', 'antenna'
     ]
-
-
-
 
 
 HARD_LEVEL = 'Unicorn-20'
 
 HARD_BOARD = np.array([
-    list('trssehca'), 
+    list('trssehca'),
     list('hmoemree'),
     list('islsiepp'),
     list('nalpilpc'),
     list('koensile'),
-    list('stiesssc'), 
-    list('qhetmtia'), 
+    list('stiesssc'),
+    list('qhetmtia'),
     list('uesantfw')
     ])
 
@@ -54,12 +51,13 @@ HARD_ANSWERS = [
     'scale', 'witch', 'shirt'
     ]
 
+
 class Test_test1(unittest.TestCase):
     def test_easy(self):
         self.setup(EASY_BOARD, EASY_WORD_LENGTHS)
 
-    def test_hard(self):
-        self.setup(HARD_BOARD, HARD_WORD_LENGTHS)
+    # def test_hard(self):
+    #    self.setup(HARD_BOARD, HARD_WORD_LENGTHS)
 
     def setup(self, board, word_lengths):
         w = WBS.WordBrainSolver()
@@ -78,7 +76,7 @@ class Test_test1(unittest.TestCase):
         # If no words were returned assert failure
         self.failIfEqual(len(w.answer), 0)
 
-        print("Completed in %f seconds." %(end - start))
+        print("Completed in %f seconds." % (end - start))
         print("Solution:")
         for word in w.answer:
             print(word.rjust(25))
